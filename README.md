@@ -1,4 +1,4 @@
-This repository contains a comprehensive e-commerce application built using a microservices architecture with .NET 8. The project is the result of a detailed microservices course, demonstrating best practices in building scalable and maintainable distributed systems.
+This repository contains a comprehensive e-commerce application built using a microservices architecture with .NET 8. The project is the result of a detailed microservices demonstrating best practices in building scalable and maintainable distributed systems.
 
 ## Project Overview
 
