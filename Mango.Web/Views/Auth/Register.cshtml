@@ -7,19 +7,22 @@
         </div>
         <div class="row">
             <div class="col-12 col-md-6 offset-md-3 pb-3">
-                <input asp-for="Email" class="form-control" placeholder="Email..." />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>            
+                <div asp-validation-summary="All" class="text-danger"></div>
+            </div>
             <div class="col-12 col-md-6 offset-md-3 pb-3">
-                <input asp-for="Email" class="form-control" placeholder="Name..." />
+                <input asp-for="Email" class="form-control" placeholder="Email..."/>
                 <span asp-validation-for="Email" class="text-danger"></span>
-            </div>            
+            </div>
             <div class="col-12 col-md-6 offset-md-3 pb-3">
-                <input asp-for="PhonenNumber" class="form-control" placeholder="PhonenNumber..." />
+                <input asp-for="Name" class="form-control" placeholder="Name..."/>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="col-12 col-md-6 offset-md-3 pb-3">
+                <input asp-for="PhonenNumber" class="form-control" placeholder="PhonenNumber..."/>
                 <span asp-validation-for="PhonenNumber" class="text-danger"></span>
             </div>
             <div class="col-12 col-md-6 offset-md-3 pb-3">
-                <input asp-for="Password" class="form-control" placeholder="Password..." />
+                <input asp-for="Password" class="form-control" placeholder="Password..."/>
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="col-12 col-md-6 offset-md-3 pb-3">
