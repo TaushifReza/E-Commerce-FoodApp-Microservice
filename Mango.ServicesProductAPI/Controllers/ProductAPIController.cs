@@ -1,22 +1,22 @@
 ﻿using AutoMapper;
-using Mango.Services.CouponAPI.Data;
-using Mango.Services.CouponAPI.Models;
-using Mango.Services.CouponAPI.Models.Dto;
+using Mango.ServicesProductAPI.Data;
+using Mango.ServicesProductAPI.Models;
+using Mango.ServicesProductAPI.Models.Dto;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Mango.Services.CouponAPI.Controllers
+namespace Mango.ServicesProductAPI.Controllers
 {
-    [Route("api/coupon")]
+    [Route("api/product")]
     [ApiController]
-    [Authorize]
-    public class CouponAPIController : ControllerBase
+    public class ProductAPIController : ControllerBase
     {
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
         private ResponseDto _response;
 
-        public CouponAPIController(AppDbContext db, IMapper mapper)
+        public ProductAPIController(AppDbContext db, IMapper mapper)
         {
             _db = db;
             _mapper = mapper;
@@ -28,8 +28,8 @@ namespace Mango.Services.CouponAPI.Controllers
         {
             try
             {
-                IEnumerable<Coupon> objList = _db.Coupons.ToList();
-                _response.Result = _mapper.Map<IEnumerable<CouponDto>>(objList);
+                IEnumerable<Product> objList = _db.Products.ToList();
+                _response.Result = _mapper.Map<IEnumerable<ProductDto>>(objList);
             }
             catch (Exception e)
             {
@@ -46,8 +46,8 @@ namespace Mango.Services.CouponAPI.Controllers
         {
             try
             {
-                var coupon = _db.Coupons.FirstOrDefault(c => c.CouponId == id);
-                _response.Result = _mapper.Map<CouponDto>(coupon); ;
+                var coupon = _db.Products.FirstOrDefault(c => c.ProductId == id);
+                _response.Result = _mapper.Map<ProductDto>(coupon); ;
             }
             catch (Exception e)
             {
@@ -57,38 +57,39 @@ namespace Mango.Services.CouponAPI.Controllers
             return _response;
         }
 
-        [HttpGet]
-        [Route("GetByCode/{code}")]
-        public ResponseDto Get(string code)
-        {
-            try
-            {
-                var coupon = _db.Coupons.FirstOrDefault(c => c.CouponCode.ToLower() == code.ToLower());
-                if (coupon == null) {
-                    _response.IsSuccess = false;
-                    return _response;
-                }
-                _response.Result = _mapper.Map<CouponDto>(coupon);
-            }
-            catch (Exception e)
-            {
-                _response.IsSuccess = false;
-                _response.Message = e.Message;
-            }
-            return _response;
-        }
+        //[HttpGet]
+        //[Route("GetByCode/{code}")]
+        //public ResponseDto Get(string code)
+        //{
+        //    try
+        //    {
+        //        var coupon = _db..FirstOrDefault(c => c.CouponCode.ToLower() == code.ToLower());
+        //        if (coupon == null)
+        //        {
+        //            _response.IsSuccess = false;
+        //            return _response;
+        //        }
+        //        _response.Result = _mapper.Map<CouponDto>(coupon);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        _response.IsSuccess = false;
+        //        _response.Message = e.Message;
+        //    }
+        //    return _response;
+        //}
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
-        public ResponseDto Post([FromBody] CouponDto couponDto)
+        public ResponseDto Post([FromBody] ProductDto productDto)
         {
             try
             {
-                var coupon = _mapper.Map<Coupon>(couponDto);
-                _db.Coupons.Add(coupon);
+                var product = _mapper.Map<Product>(productDto);
+                _db.Products.Add(product);
                 _db.SaveChanges();
-                
-                _response.Result = _mapper.Map<CouponDto>(coupon);
+
+                _response.Result = _mapper.Map<ProductDto>(product);
             }
             catch (Exception e)
             {
@@ -100,15 +101,15 @@ namespace Mango.Services.CouponAPI.Controllers
 
         [HttpPut]
         [Authorize(Roles = "ADMIN")]
-        public ResponseDto Put([FromBody] CouponDto couponDto)
+        public ResponseDto Put([FromBody] ProductDto productDto)
         {
             try
             {
-                var coupon = _mapper.Map<Coupon>(couponDto);
-                _db.Coupons.Update(coupon);
+                var product = _mapper.Map<Product>(productDto);
+                _db.Products.Update(product);
                 _db.SaveChanges();
 
-                _response.Result = _mapper.Map<CouponDto>(coupon);
+                _response.Result = _mapper.Map<ProductDto>(product);
             }
             catch (Exception e)
             {
@@ -125,9 +126,8 @@ namespace Mango.Services.CouponAPI.Controllers
         {
             try
             {
-
-                var coupon = _db.Coupons.FirstOrDefault(c => c.CouponId == id);
-                _db.Coupons.Remove(coupon);
+                var product = _db.Products.FirstOrDefault(c => c.ProductId == id);
+                _db.Products.Remove(product);
                 _db.SaveChanges();
             }
             catch (Exception e)
