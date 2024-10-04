@@ -2,7 +2,6 @@
 using Mango.Services.EmailAPI.Models;
 using Mango.Services.EmailAPI.Models.Dtos;
 using Mango.Services.EmailAPI.Services.IService;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 
@@ -34,6 +33,12 @@ namespace Mango.Services.EmailAPI.Services
             message.Append("</ul>");
 
             await LogAndEmail(message.ToString(), cartDto.CartHeader.Email);
+        }
+
+        public async Task RegisterUserEmailAndLog(string email)
+        {
+            string message = "User Register Successful. <br/> Email: " + email;
+            await LogAndEmail(message, "admin@gmail.com");
         }
 
         private async Task<bool> LogAndEmail(string message, string email)

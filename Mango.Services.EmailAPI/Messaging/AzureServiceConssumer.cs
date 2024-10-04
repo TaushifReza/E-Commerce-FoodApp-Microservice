@@ -12,8 +12,10 @@ namespace Mango.Services.EmailAPI.Messaging
         private readonly EmailService _emailService;
         private readonly string serviceBusConectionString;
         private readonly string emailCartQueue;
+        private readonly string registerUserQueue;
 
         private ServiceBusProcessor _emailCartProcessor;
+        private ServiceBusProcessor _registerUserProcessor;
 
         public AzureServiceBusConsumer(IConfiguration configuration, EmailService emailService)
         {
@@ -23,9 +25,11 @@ namespace Mango.Services.EmailAPI.Messaging
             serviceBusConectionString = _configuration.GetValue<string>("ServiceBusConnectionString");
 
             emailCartQueue = _configuration.GetValue<string>("TopicAndQueueNames:EmailShoppingCartQueue");
+            registerUserQueue = _configuration.GetValue<string>("TopicAndQueueNames:RegisterUserQueue");
 
             var client = new ServiceBusClient(serviceBusConectionString);
             _emailCartProcessor = client.CreateProcessor(emailCartQueue);
+            _registerUserProcessor = client.CreateProcessor(registerUserQueue);
         }
 
         public async Task StartAsync()
@@ -33,6 +37,10 @@ namespace Mango.Services.EmailAPI.Messaging
             _emailCartProcessor.ProcessMessageAsync += OnEmailCartRequestReceived;
             _emailCartProcessor.ProcessErrorAsync += ErrorHandler;
             await _emailCartProcessor.StartProcessingAsync();
+
+            _registerUserProcessor.ProcessMessageAsync += OnUserRegisterRequestReceived;
+            _registerUserProcessor.ProcessErrorAsync += ErrorHandler;
+            await _registerUserProcessor.StartProcessingAsync();
         }
 
         private Task ErrorHandler(ProcessErrorEventArgs arg)
@@ -61,10 +69,32 @@ namespace Mango.Services.EmailAPI.Messaging
             }
         }
 
+        private async Task OnUserRegisterRequestReceived(ProcessMessageEventArgs arg)
+        {
+            var message = arg.Message;
+            var body = Encoding.UTF8.GetString(message.Body);
+
+            string email = JsonConvert.DeserializeObject<string>(body);
+            try
+            {
+                //TODO - try to log email
+                await _emailService.RegisterUserEmailAndLog(email);
+                await arg.CompleteMessageAsync(arg.Message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
         public async Task StopAsync()
         {
             await _emailCartProcessor.StartProcessingAsync();
-            await _emailCartProcessor.DisposeAsync();
+            await _emailCartProcessor.DisposeAsync();            
+            
+            await _registerUserProcessor.StartProcessingAsync();
+            await _registerUserProcessor.DisposeAsync();
         }
     }
 }
