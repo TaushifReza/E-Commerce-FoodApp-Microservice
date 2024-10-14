@@ -2,6 +2,8 @@ This repository contains a comprehensive e-commerce application built using a mi
 
 ## Project Overview
 
+![image](https://github.com/user-attachments/assets/60900614-3b56-440d-b0ab-900e77be5aff)
+
 This e-commerce application consists of multiple microservices that work together to provide a complete online food shopping experience. The microservices include:
 
 - Product Microservice
