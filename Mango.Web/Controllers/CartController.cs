@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Mango.Web.Models;
 using Mango.Web.Service.IService;
+using Mango.Web.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -68,6 +69,17 @@ namespace Mango.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Confirmation(int orderId)
         {
+            ResponseDto? response = await _orderService.ValidateStripeSessionAsync(orderId);
+            if (response != null & response.IsSuccess)
+            {
+                OrderHeaderDto orderHeader =
+                    JsonConvert.DeserializeObject<OrderHeaderDto>(Convert.ToString(response.Result));
+                if (orderHeader.Status == SD.StatusApproved)
+                {
+                    return View();
+                }
+            }
+            // redirect to some error page base on status
             return View(orderId);
         }
 
