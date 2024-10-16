@@ -67,6 +67,14 @@ namespace Mango.Services.OrderAPI.Controllers
                     Mode = "payment",
                 };
 
+                var DiscountObj = new List<SessionDiscountOptions>()
+                {
+                    new SessionDiscountOptions
+                    {
+                        Coupon = dto.OrderHeader.CouponCode
+                    }
+                };
+
                 foreach (var item in dto.OrderHeader.OrderDetails)
                 {
                     var sessionLineItem = new SessionLineItemOptions
@@ -86,6 +94,10 @@ namespace Mango.Services.OrderAPI.Controllers
                     options.LineItems.Add(sessionLineItem);
                 }
 
+                if (dto.OrderHeader.Discount > 0)
+                {
+                    options.Discounts = DiscountObj;
+                }
                 var service = new Stripe.Checkout.SessionService();
                 Session session = service.Create(options);
                 dto.StripeSessionUrl = session.Url;
