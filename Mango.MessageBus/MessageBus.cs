@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Mango.MessageBus
 {
-    public class MessageBus : IMessageBus
+    public class MessageBus : IMessageBus 
     {
         private string connectionString =
             "Endpoint=sb://ecommicro.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=T742n6qYncXzrwHJqAH48UQHf53AUVdHi+ASbMUQZxw=";
